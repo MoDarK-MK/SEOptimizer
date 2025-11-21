@@ -1,6 +1,5 @@
 const analyzer = new SEOAnalyzer();
 let currentAnalysisData = null;
-let autoSaveInterval = null;
 
 function switchTab(tabName) {
   document
@@ -9,47 +8,39 @@ function switchTab(tabName) {
   document
     .querySelectorAll(".tab-content")
     .forEach((content) => content.classList.remove("active"));
-
   event.target.classList.add("active");
   document.getElementById(tabName + "Tab").classList.add("active");
-
-  if (tabName === "history") {
-    loadHistory();
-  }
+  if (tabName === "history") loadHistory();
 }
 
 function loadFile(event) {
   const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      document.getElementById("textInput").value = e.target.result;
-    };
-    reader.readAsText(file);
-  }
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById("textInput").value = e.target.result;
+  };
+  reader.readAsText(file);
 }
 
 function loadSampleText() {
-  const sampleText =
+  document.getElementById("textInput").value =
     "بهینه‌سازی موتورهای جستجو یا سئو یکی از مهم‌ترین تکنیک‌های بازاریابی دیجیتال است. با استفاده از سئو می‌توانید وب‌سایت خود را در نتایج جستجوی گوگل بهبود دهید و ترافیک ارگانیک بیشتری جذب کنید. کلمات کلیدی مناسب، محتوای باکیفیت و ساختار صحیح وب‌سایت از عوامل مهم در سئو هستند. همچنین سرعت بارگذاری سایت، تجربه کاربری و بهینه‌سازی موبایل نیز تاثیر زیادی در رتبه‌بندی دارند. استفاده از لینک‌های داخلی و خارجی، تصاویر بهینه شده با alt text و محتوای منحصر به فرد از دیگر نکات کلیدی SEO می‌باشند.";
-  document.getElementById("textInput").value = sampleText;
 }
 
 function analyzeSEO() {
   const text = document.getElementById("textInput").value.trim();
-
   if (!text) {
     alert("⚠️ لطفاً ابتدا متنی وارد کنید!");
     return;
   }
-
   try {
     const analysisData = analyzer.analyze(text);
     currentAnalysisData = analysisData;
-
     saveToHistory(analysisData);
     displayResults(analysisData);
     updateVisualizations(analysisData);
+    applyColorsFromStorage();
   } catch (error) {
     alert("خطا در تحلیل متن: " + error.message);
   }
@@ -58,7 +49,6 @@ function analyzeSEO() {
 function displayResults(data) {
   const resultsDiv = document.getElementById("results");
   const clearBtn = document.getElementById("clearBtn");
-
   let scoreClass =
     data.score >= 70
       ? "score-excellent"
@@ -67,136 +57,82 @@ function displayResults(data) {
       : "score-poor";
   let scoreLabel =
     data.score >= 70 ? "عالی" : data.score >= 40 ? "خوب" : "نیاز به بهبود";
-
   let html = `
-        <div class="stat-grid">
-            <div class="stat-card liquid-glass">
-                <div class="stat-value">${data.wordCount}</div>
-                <div class="stat-label">📊 کلمات</div>
-            </div>
-            <div class="stat-card liquid-glass">
-                <div class="stat-value">${data.charCount}</div>
-                <div class="stat-label">📝 کاراکتر</div>
-            </div>
-            <div class="stat-card liquid-glass">
-                <div class="stat-value">${data.uniqueWords}</div>
-                <div class="stat-label">🔤 کلمات منحصر</div>
-            </div>
-            <div class="stat-card liquid-glass">
-                <div class="stat-value">${data.sentenceCount}</div>
-                <div class="stat-label">📄 جملات</div>
-            </div>
-        </div>
-
-        <div class="result-card liquid-glass">
-            <h3>🌐 زبان متن</h3>
-            <p><span class="language-badge">${data.language}</span></p>
-        </div>
-
-        <div class="result-card liquid-glass">
-            <h3>📖 خوانایی متن</h3>
-            <p>
-                <span class="readability-indicator ${data.readability.className}">${data.readability.level}</span>
-                میانگین ${data.avgWordsPerSentence} کلمه در هر جمله
-            </p>
-        </div>
-    `;
-
-  if (data.keywords.length > 0) {
-    html += `
-            <div class="result-card liquid-glass">
-                <h3>🔑 کلمات کلیدی برتر</h3>
-                <div class="keywords-list">
-                    ${data.keywords
-                      .map(
-                        (kw) =>
-                          `<span class="keyword-tag">${kw[0]} (${kw[1]})</span>`
-                      )
-                      .join("")}
-                </div>
-            </div>
-        `;
-  }
-
-  if (data.keywordDensities.length > 0) {
-    html += `
-            <div class="result-card liquid-glass">
-                <h3>🔍 تراکم کلمات کلیدی</h3>
-        `;
+    <div class="stat-grid">
+      <div class="stat-card liquid-glass"><div class="stat-value">${data.wordCount}</div><div class="stat-label">📊 کلمات</div></div>
+      <div class="stat-card liquid-glass"><div class="stat-value">${data.charCount}</div><div class="stat-label">📝 کاراکتر</div></div>
+      <div class="stat-card liquid-glass"><div class="stat-value">${data.uniqueWords}</div><div class="stat-label">🔤 کلمات منحصر</div></div>
+      <div class="stat-card liquid-glass"><div class="stat-value">${data.sentenceCount}</div><div class="stat-label">📄 جملات</div></div>
+    </div>
+    <div class="result-card liquid-glass"><h3>🌐 زبان متن</h3><p><span class="language-badge">${data.language}</span></p></div>
+    <div class="result-card liquid-glass"><h3>📖 خوانایی متن</h3><p>
+      <span class="readability-indicator ${data.readability.className}">${data.readability.level}</span>
+      میانگین ${data.avgWordsPerSentence} کلمه در هر جمله</p>
+    </div>
+  `;
+  if (data.keywords.length)
+    html += `<div class="result-card liquid-glass"><h3>🔑 کلمات کلیدی برتر</h3>
+      <div class="keywords-list">${data.keywords
+        .map((kw) => `<span class="keyword-tag">${kw[0]} (${kw[1]})</span>`)
+        .join("")}</div></div>`;
+  if (data.keywordDensities.length) {
+    html += `<div class="result-card liquid-glass"><h3>🔍 تراکم کلمات کلیدی</h3>`;
     data.keywordDensities.forEach((kw) => {
-      html += `
-                <div style="margin: 10px 0;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>${kw.word}</span>
-                        <span class="density-indicator">
-                            <span>${kw.density}%</span>
-                            <span style="color: ${kw.color};">${
-        kw.status
-      }</span>
-                        </span>
-                    </div>
-                    <div class="density-bar">
-                        <div class="density-fill" style="width: ${Math.min(
-                          kw.density * 33,
-                          100
-                        )}%; background: ${kw.color};"></div>
-                    </div>
-                </div>
-            `;
+      html += `<div style="margin: 10px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span>${kw.word}</span>
+          <span class="density-indicator"><span>${
+            kw.density
+          }%</span><span style="color:${kw.color};">${kw.status}</span></span>
+        </div>
+        <div class="density-bar"><div class="density-fill" style="width: ${Math.min(
+          kw.density * 33,
+          100
+        )}%; background:${kw.color};"></div></div>
+      </div>`;
     });
     html += `</div>`;
   }
-
   html += `
-        <div class="result-card liquid-glass">
-            <h3>📌 عنوان پیشنهادی SEO</h3>
-            <p>${data.seoTitle}</p>
-            <button class="copy-btn" onclick="copyToClipboard(\`${
-              data.seoTitle
-            }\`, this)">📋 کپی عنوان</button>
-        </div>
-        <div class="result-card liquid-glass">
-            <h3>📄 توضیحات متا پیشنهادی</h3>
-            <p>${data.metaDescription}</p>
-            <button class="copy-btn" onclick="copyToClipboard(\`${
-              data.metaDescription
-            }\`, this)">📋 کپی توضیحات</button>
-        </div>
-
-        <div class="score-card liquid-glass">
-            <h3>⭐ امتیاز کلی SEO</h3>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${data.score}%; ${
+    <div class="result-card liquid-glass"><h3>📌 عنوان پیشنهادی SEO</h3><p>${
+      data.seoTitle
+    }</p>
+      <button class="copy-btn" onclick="copyToClipboard('${
+        data.seoTitle
+      }', this)">📋 کپی عنوان</button>
+    </div>
+    <div class="result-card liquid-glass"><h3>📄 توضیحات متا پیشنهادی</h3><p>${
+      data.metaDescription
+    }</p>
+      <button class="copy-btn" onclick="copyToClipboard('${
+        data.metaDescription
+      }', this)">📋 کپی توضیحات</button>
+    </div>
+    <div class="score-card liquid-glass"><h3>⭐ امتیاز کلی SEO</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:${data.score}%;${
     data.score < 40
-      ? "background: #e74c3c;"
+      ? "background:#e74c3c;"
       : data.score < 70
-      ? "background: #f39c12;"
+      ? "background:#f39c12;"
       : ""
-  }">
-                    ${data.score}%
-                </div>
-            </div>
-            <div class="score-value ${scoreClass}">${data.score}/100</div>
-            <p>${scoreLabel}</p>
-        </div>
-    `;
-
-  if (data.suggestions.length > 0) {
+  }">${data.score}%</div>
+      </div>
+      <div class="score-value ${scoreClass}">${data.score}/100</div>
+      <p>${scoreLabel}</p>
+    </div>
+  `;
+  if (data.suggestions.length) {
     html += `<div class="result-card liquid-glass"><h3>💡 پیشنهادات بهبود</h3>`;
     data.suggestions.forEach((sug) => {
-      html += `
-                <div class="suggestion-card">
-                    <h4>${sug.title}</h4>
-                    <p>${sug.text}</p>
-                </div>
-            `;
+      html += `<div class="suggestion-card"><h4>${sug.title}</h4><p>${sug.text}</p></div>`;
     });
     html += `</div>`;
   }
-
   resultsDiv.innerHTML = html;
   resultsDiv.classList.add("show");
   clearBtn.style.display = "block";
+  applyColorsFromStorage();
 }
 
 function updateVisualizations(data) {
@@ -204,48 +140,47 @@ function updateVisualizations(data) {
   updateProgressRing(data.score);
   updateHashtags(data.keywords);
   updateDensityChart(data.keywordDensities);
+  applyColorsFromStorage();
 }
 
 function updateWordCloud(keywords) {
   const wordCloud = document.getElementById("wordCloud");
-  if (keywords.length === 0) {
+  if (!keywords.length) {
     wordCloud.innerHTML =
-      '<p style="text-align: center; color: rgba(245, 245, 245, 0.7);">کلمات کلیدی یافت نشد</p>';
+      '<p style="text-align:center;color:rgba(245,245,245,0.7);">کلمات کلیدی یافت نشد</p>';
     return;
   }
-
   const maxFreq = keywords[0][1];
   wordCloud.innerHTML = keywords
     .map((kw, i) => {
       const size = 12 + (kw[1] / maxFreq) * 20;
       const delay = i * 0.3;
-      return `<div class="word-cloud-item" style="font-size: ${size}px; animation-delay: ${delay}s;">${kw[0]}</div>`;
+      return `<div class="word-cloud-item" style="font-size:${size}px;animation-delay:${delay}s;">${kw[0]}</div>`;
     })
     .join("");
+  applyColorsFromStorage();
 }
 
 function updateProgressRing(score) {
   const circle = document.querySelector(".progress-ring-circle");
   const text = document.getElementById("scoreText");
   const circumference = 2 * Math.PI * 52;
-
   circle.style.strokeDasharray = `${circumference} ${circumference}`;
   const offset = circumference - (score / 100) * circumference;
-
   setTimeout(() => {
     circle.style.strokeDashoffset = offset;
     text.textContent = score;
+    applyColorsFromStorage();
   }, 100);
 }
 
 function updateHashtags(keywords) {
   const hashtagList = document.getElementById("hashtagList");
-  if (keywords.length === 0) {
+  if (!keywords.length) {
     hashtagList.innerHTML =
-      '<p style="text-align: center; color: rgba(245, 245, 245, 0.7); width: 100%;">کلمات کلیدی یافت نشد</p>';
+      '<p style="text-align:center;color:rgba(245,245,245,0.7);width:100%;">کلمات کلیدی یافت نشد</p>';
     return;
   }
-
   hashtagList.innerHTML = keywords
     .slice(0, 5)
     .map(
@@ -253,120 +188,83 @@ function updateHashtags(keywords) {
         `<div class="hashtag-item" onclick="copyToClipboard('#${kw[0]}', this)">#${kw[0]}</div>`
     )
     .join("");
+  applyColorsFromStorage();
 }
 
 function updateDensityChart(keywordDensities) {
   const canvas = document.getElementById("densityChart");
   const ctx = canvas.getContext("2d");
-
   canvas.width = canvas.offsetWidth;
   canvas.height = 250;
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  if (keywordDensities.length === 0) return;
-
+  if (!keywordDensities.length) return;
   const barWidth = canvas.width / keywordDensities.length - 20;
   const maxDensity = Math.max(...keywordDensities.map((k) => k.density));
-
   keywordDensities.forEach((kw, i) => {
     const height = (kw.density / maxDensity) * 180;
     const x = i * (barWidth + 20) + 20;
     const y = canvas.height - height - 40;
-
     ctx.fillStyle = kw.color;
     ctx.fillRect(x, y, barWidth, height);
-
     ctx.fillStyle = "#f5f5f5";
     ctx.font = "12px Vazir, Segoe UI";
     ctx.textAlign = "center";
     ctx.fillText(kw.word, x + barWidth / 2, canvas.height - 25);
     ctx.fillText(kw.density + "%", x + barWidth / 2, y - 5);
   });
+  applyColorsFromStorage();
 }
 
 function compareTexts() {
   const text1 = document.getElementById("textInput1").value.trim();
   const text2 = document.getElementById("textInput2").value.trim();
-
   if (!text1 || !text2) {
     alert("⚠️ لطفاً هر دو متن را وارد کنید!");
     return;
   }
-
   try {
     const comparison = analyzer.compare(text1, text2);
     displayComparisonResults(comparison);
+    applyColorsFromStorage();
   } catch (error) {
     alert("خطا در مقایسه متن‌ها: " + error.message);
   }
 }
 
 function displayComparisonResults(comparison) {
+  const data1 = comparison.text1,
+    data2 = comparison.text2;
   const compareResults = document.getElementById("compareResults");
-
-  const data1 = comparison.text1;
-  const data2 = comparison.text2;
-
   compareResults.innerHTML = `
-        <div class="result-card liquid-glass">
-            <h3 style="text-align: center; margin-bottom: 20px;">⚖️ نتایج مقایسه</h3>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>معیار</th>
-                        <th>متن اول</th>
-                        <th>متن دوم</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>تعداد کلمات</td>
-                        <td>${data1.wordCount}</td>
-                        <td>${data2.wordCount}</td>
-                    </tr>
-                    <tr>
-                        <td>تعداد کاراکتر</td>
-                        <td>${data1.charCount}</td>
-                        <td>${data2.charCount}</td>
-                    </tr>
-                    <tr>
-                        <td>تعداد جملات</td>
-                        <td>${data1.sentenceCount}</td>
-                        <td>${data2.sentenceCount}</td>
-                    </tr>
-                    <tr>
-                        <td>میانگین کلمات/جمله</td>
-                        <td>${data1.avgWordsPerSentence}</td>
-                        <td>${data2.avgWordsPerSentence}</td>
-                    </tr>
-                    <tr>
-                        <td>امتیاز SEO</td>
-                        <td>${data1.score}/100</td>
-                        <td>${data2.score}/100</td>
-                    </tr>
-                    <tr>
-                        <td>خوانایی</td>
-                        <td>${data1.readability.level}</td>
-                        <td>${data2.readability.level}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    `;
+    <div class="result-card liquid-glass">
+      <h3 style="text-align:center;margin-bottom:20px;">⚖️ نتایج مقایسه</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr><th>معیار</th><th>متن اول</th><th>متن دوم</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>تعداد کلمات</td><td>${data1.wordCount}</td><td>${data2.wordCount}</td></tr>
+          <tr><td>تعداد کاراکتر</td><td>${data1.charCount}</td><td>${data2.charCount}</td></tr>
+          <tr><td>تعداد جملات</td><td>${data1.sentenceCount}</td><td>${data2.sentenceCount}</td></tr>
+          <tr><td>میانگین کلمات/جمله</td><td>${data1.avgWordsPerSentence}</td><td>${data2.avgWordsPerSentence}</td></tr>
+          <tr><td>امتیاز SEO</td><td>${data1.score}/100</td><td>${data2.score}/100</td></tr>
+          <tr><td>خوانایی</td><td>${data1.readability.level}</td><td>${data2.readability.level}</td></tr>
+        </tbody>
+      </table>
+    </div>
+  `;
   compareResults.classList.add("show");
+  applyColorsFromStorage();
 }
 
 function saveToHistory(data) {
   let history = JSON.parse(localStorage.getItem("seoHistory") || "[]");
-
-  const scoreClass =
+  let scoreClass =
     data.score >= 70
       ? "score-excellent"
       : data.score >= 40
       ? "score-good"
       : "score-poor";
-
   history.unshift({
     text: data.seoTitle.substring(0, 100),
     wordCount: data.wordCount,
@@ -376,7 +274,6 @@ function saveToHistory(data) {
     date: new Date().toLocaleString("fa-IR"),
     id: Date.now(),
   });
-
   history = history.slice(0, 10);
   localStorage.setItem("seoHistory", JSON.stringify(history));
 }
@@ -384,83 +281,66 @@ function saveToHistory(data) {
 function loadHistory() {
   const history = JSON.parse(localStorage.getItem("seoHistory") || "[]");
   const historyList = document.getElementById("historyList");
-
-  if (history.length === 0) {
+  if (!history.length) {
     historyList.innerHTML =
-      '<div class="result-card liquid-glass"><p style="text-align: center; color: rgba(245, 245, 245, 0.7);">هنوز تحلیلی ذخیره نشده است</p></div>';
+      '<div class="result-card liquid-glass"><p style="text-align:center;color:rgba(245,245,245,0.7);">هنوز تحلیلی ذخیره نشده است</p></div>';
     return;
   }
-
   historyList.innerHTML = history
     .map(
       (item) => `
-        <div class="result-card liquid-glass">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <span style="font-size: 12px; color: rgba(245, 245, 245, 0.6);">${item.date}</span>
-                <span class="score-value ${item.scoreClass}" style="font-size: 20px;">${item.score}/100</span>
-            </div>
-            <p style="font-size: 14px;">${item.text}...</p>
-            <div style="margin-top: 10px;">
-                <span style="font-size: 12px; color: rgba(245, 245, 245, 0.7);">کلمات: ${item.wordCount} | کاراکتر: ${item.charCount}</span>
-            </div>
-        </div>
-    `
+    <div class="result-card liquid-glass">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:12px;color:rgba(245,245,245,0.6);">${item.date}</span>
+        <span class="score-value ${item.scoreClass}" style="font-size:20px;">${item.score}/100</span>
+      </div>
+      <p style="font-size:14px;">${item.text}...</p>
+      <div style="margin-top:10px;">
+        <span style="font-size:12px;color:rgba(245,245,245,0.7);">کلمات: ${item.wordCount} | کاراکتر: ${item.charCount}</span>
+      </div>
+    </div>
+  `
     )
     .join("");
+  applyColorsFromStorage();
 }
 
+// دانلودها و اشتراک
 function exportToPDF() {
   if (!currentAnalysisData) {
     alert("⚠️ ابتدا یک متن را تحلیل کنید!");
     return;
   }
-
   const content = `
 SEO Analysis Report - گزارش تحلیل SEO
 =========================================
-
 تاریخ: ${new Date().toLocaleString("fa-IR")}
 زبان: ${currentAnalysisData.language}
-
 آمار کلی:
----------
 - تعداد کلمات: ${currentAnalysisData.wordCount}
 - تعداد کاراکتر: ${currentAnalysisData.charCount}
 - کلمات منحصر به فرد: ${currentAnalysisData.uniqueWords}
 - تعداد جملات: ${currentAnalysisData.sentenceCount}
 - میانگین کلمات در جمله: ${currentAnalysisData.avgWordsPerSentence}
-
 خوانایی: ${currentAnalysisData.readability.level}
-
 امتیاز SEO: ${currentAnalysisData.score}/100
-
 عنوان پیشنهادی:
------------------
 ${currentAnalysisData.seoTitle}
-
 توضیحات متا پیشنهادی:
-----------------------
 ${currentAnalysisData.metaDescription}
-
 کلمات کلیدی برتر:
-------------------
 ${currentAnalysisData.keywords
   .map((k) => `- ${k[0]} (تکرار: ${k[1]} بار)`)
   .join("\n")}
-
 تراکم کلمات کلیدی:
--------------------
 ${currentAnalysisData.keywordDensities
   .map((k) => `- ${k.word}: ${k.density}% (${k.status})`)
   .join("\n")}
-
 پیشنهادات بهبود:
------------------
 ${currentAnalysisData.suggestions
-  .map((s, i) => `${i + 1}. ${s.title}\n   ${s.text}`)
+  .map((s, i) => `${i + 1}. ${s.title}\n   ${s.text}`)
   .join("\n\n")}
-    `;
-
+  `;
   const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -468,6 +348,7 @@ ${currentAnalysisData.suggestions
   a.download = `seo-report-${Date.now()}.txt`;
   a.click();
   showExportMessage();
+  applyColorsFromStorage();
 }
 
 function exportToJSON() {
@@ -475,7 +356,6 @@ function exportToJSON() {
     alert("⚠️ ابتدا یک متن را تحلیل کنید!");
     return;
   }
-
   const blob = new Blob([JSON.stringify(currentAnalysisData, null, 2)], {
     type: "application/json",
   });
@@ -485,6 +365,7 @@ function exportToJSON() {
   a.download = `seo-analysis-${Date.now()}.json`;
   a.click();
   showExportMessage();
+  applyColorsFromStorage();
 }
 
 function exportToCSV() {
@@ -492,7 +373,6 @@ function exportToCSV() {
     alert("⚠️ ابتدا یک متن را تحلیل کنید!");
     return;
   }
-
   const csv = `معیار,مقدار
 تعداد کلمات,${currentAnalysisData.wordCount}
 تعداد کاراکتر,${currentAnalysisData.charCount}
@@ -503,7 +383,6 @@ function exportToCSV() {
 زبان,${currentAnalysisData.language}
 خوانایی,${currentAnalysisData.readability.level}
 `;
-
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -511,6 +390,7 @@ function exportToCSV() {
   a.download = `seo-data-${Date.now()}.csv`;
   a.click();
   showExportMessage();
+  applyColorsFromStorage();
 }
 
 function copyAllResults() {
@@ -518,27 +398,21 @@ function copyAllResults() {
     alert("⚠️ ابتدا یک متن را تحلیل کنید!");
     return;
   }
-
   const text = `
 امتیاز SEO: ${currentAnalysisData.score}/100
 تعداد کلمات: ${currentAnalysisData.wordCount}
 تعداد کاراکتر: ${currentAnalysisData.charCount}
 زبان: ${currentAnalysisData.language}
 خوانایی: ${currentAnalysisData.readability.level}
-
 عنوان پیشنهادی:
 ${currentAnalysisData.seoTitle}
-
 توضیحات متا:
 ${currentAnalysisData.metaDescription}
-
 کلمات کلیدی:
 ${currentAnalysisData.keywords.map((k) => `${k[0]} (${k[1]})`).join(", ")}
-    `;
-
-  navigator.clipboard.writeText(text).then(() => {
-    showExportMessage();
-  });
+  `;
+  navigator.clipboard.writeText(text).then(showExportMessage);
+  applyColorsFromStorage();
 }
 
 function copyToClipboard(text, button) {
@@ -549,6 +423,7 @@ function copyToClipboard(text, button) {
       button.innerHTML = originalText;
     }, 2000);
   });
+  applyColorsFromStorage();
 }
 
 function showExportMessage() {
@@ -557,13 +432,13 @@ function showExportMessage() {
   setTimeout(() => {
     msg.style.display = "none";
   }, 3000);
+  applyColorsFromStorage();
 }
 
 function toggleTheme() {
   document.body.classList.toggle("light-theme");
   const sunIcon = document.getElementById("theme-icon-sun");
   const moonIcon = document.getElementById("theme-icon-moon");
-
   if (document.body.classList.contains("light-theme")) {
     sunIcon.style.display = "block";
     moonIcon.style.display = "none";
@@ -573,6 +448,7 @@ function toggleTheme() {
     moonIcon.style.display = "block";
     localStorage.setItem("theme", "dark");
   }
+  applyColorsFromStorage();
 }
 
 function clearAll() {
@@ -581,12 +457,12 @@ function clearAll() {
   document.getElementById("results").classList.remove("show");
   document.getElementById("clearBtn").style.display = "none";
   currentAnalysisData = null;
-
   document.getElementById("wordCloud").innerHTML =
-    '<p style="text-align: center; color: rgba(245, 245, 245, 0.7);">ابتدا یک متن را تحلیل کنید</p>';
+    '<p style="text-align:center;color:rgba(245,245,245,0.7);">ابتدا یک متن را تحلیل کنید</p>';
   document.getElementById("hashtagList").innerHTML =
-    '<p style="text-align: center; color: rgba(245, 245, 245, 0.7); width: 100%;">ابتدا یک متن را تحلیل کنید</p>';
+    '<p style="text-align:center;color:rgba(245,245,245,0.7);width:100%;">ابتدا یک متن را تحلیل کنید</p>';
   document.getElementById("scoreText").textContent = "0";
+  applyColorsFromStorage();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -596,4 +472,102 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("theme-icon-sun").style.display = "block";
     document.getElementById("theme-icon-moon").style.display = "none";
   }
+  applyColorsFromStorage();
 });
+
+function toggleSettingsPanel() {
+  document.getElementById("settingsPanel").classList.toggle("active");
+}
+
+function applyColorsFromStorage() {
+  const bg = localStorage.getItem("color-bg") || "#0a0a0a";
+  const card = localStorage.getItem("color-card") || "rgba(26,95,74,0.3)";
+  const btn = localStorage.getItem("color-btn") || "#2ecc71";
+  const font = localStorage.getItem("color-font") || "#f5f5f5";
+  const header = localStorage.getItem("color-header") || "#f5f5f5";
+  const tabs = localStorage.getItem("color-tabs") || "rgba(26,95,74,0.3)";
+  const scroll = localStorage.getItem("color-scroll") || "#2ecc71";
+  const cloud = localStorage.getItem("color-cloud") || "#2ecc71";
+  const progress = localStorage.getItem("color-progress") || "#2ecc71";
+
+  document.body.style.background = bg;
+
+  document
+    .querySelectorAll(".liquid-glass, .stat-card, .result-card, .score-card")
+    .forEach((el) => {
+      el.style.background = card;
+    });
+  document
+    .querySelectorAll(
+      ".btn-analyze, .btn-action, .btn-clear, .btn-export, .copy-btn"
+    )
+    .forEach((el) => {
+      el.style.background = btn;
+    });
+  document.body.style.color = font;
+  document.querySelectorAll(".header h1").forEach((el) => {
+    el.style.color = header;
+  });
+  document.querySelectorAll(".tab-btn").forEach((el) => {
+    el.style.background = tabs;
+  });
+  document.querySelectorAll(".word-cloud-item").forEach((el) => {
+    el.style.color = cloud;
+  });
+  document.querySelectorAll(".progress-fill").forEach((el) => {
+    el.style.background = progress;
+  });
+
+  document.getElementById("bgColorPicker").value = bg;
+  document.getElementById("cardColorPicker").value = card.startsWith("rgba")
+    ? "#1a5f4a"
+    : card;
+  document.getElementById("buttonColorPicker").value = btn;
+  document.getElementById("fontColorPicker").value = font;
+  document.getElementById("headerColorPicker").value = header;
+  document.getElementById("tabsColorPicker").value = tabs.startsWith("rgba")
+    ? "#1a5f4a"
+    : tabs;
+  document.getElementById("scrollColorPicker").value = scroll;
+  document.getElementById("cloudColorPicker").value = cloud;
+  document.getElementById("progressColorPicker").value = progress;
+}
+
+[
+  ["bgColorPicker", "color-bg"],
+  ["cardColorPicker", "color-card"],
+  ["buttonColorPicker", "color-btn"],
+  ["fontColorPicker", "color-font"],
+  ["headerColorPicker", "color-header"],
+  ["tabsColorPicker", "color-tabs"],
+  ["scrollColorPicker", "color-scroll"],
+  ["cloudColorPicker", "color-cloud"],
+  ["progressColorPicker", "color-progress"],
+].forEach(([id, key]) => {
+  const el = document.getElementById(id);
+  if (el)
+    el.addEventListener("input", (e) => {
+      localStorage.setItem(key, e.target.value);
+      applyColorsFromStorage();
+    });
+});
+
+function resetColors() {
+  [
+    "color-bg",
+    "color-card",
+    "color-btn",
+    "color-font",
+    "color-header",
+    "color-tabs",
+    "color-scroll",
+    "color-cloud",
+    "color-progress",
+  ].forEach((k) => localStorage.removeItem(k));
+  applyColorsFromStorage();
+}
+function saveSettings() {
+  applyColorsFromStorage();
+  toggleSettingsPanel();
+  alert("تنظیمات ذخیره شد و اعمال گردید!");
+}

@@ -9,6 +9,61 @@
     <title>SEO Optimizer</title>
   </head>
   <body>
+    <!-- دکمه تنظیمات (ایموجی چرخ‌دنده) -->
+    <button
+      class="settings-icon"
+      onclick="toggleSettingsPanel()"
+      title="تنظیمات سایت"
+    >
+      ⚙️
+    </button>
+
+    <!-- پنل تنظیمات -->
+    <div class="settings-panel" id="settingsPanel">
+      <h2>تنظیمات رنگ و ظاهر سایت</h2>
+      <div class="setting-row">
+        <label>رنگ پس‌زمینه سایت</label>
+        <input type="color" id="bgColorPicker" />
+      </div>
+      <div class="setting-row">
+        <label>رنگ کارت‌ها</label>
+        <input type="color" id="cardColorPicker" />
+      </div>
+      <div class="setting-row">
+        <label>رنگ دکمه‌ها</label>
+        <input type="color" id="buttonColorPicker" />
+      </div>
+      <div class="setting-row">
+        <label>رنگ متن عمومی</label>
+        <input type="color" id="fontColorPicker" />
+      </div>
+      <div class="setting-row">
+        <label>رنگ هدر</label>
+        <input type="color" id="headerColorPicker" />
+      </div>
+      <div class="setting-row">
+        <label>رنگ تب‌ها</label>
+        <input type="color" id="tabsColorPicker" />
+      </div>
+      <div class="setting-row">
+        <label>رنگ اسکرول‌بار</label>
+        <input type="color" id="scrollColorPicker" />
+      </div>
+      <div class="setting-row">
+        <label>رنگ ابر کلمات کلیدی</label>
+        <input type="color" id="cloudColorPicker" />
+      </div>
+      <div class="setting-row">
+        <label>رنگ نوار پیشرفت</label>
+        <input type="color" id="progressColorPicker" />
+      </div>
+      <button class="btn-action" onclick="saveSettings()">ذخیره تنظیمات</button>
+      <button class="btn-action" onclick="resetColors()">ریست تنظیمات</button>
+      <button class="btn-action" onclick="toggleSettingsPanel()">
+        بستن پنل
+      </button>
+    </div>
+
     <div class="iphone-container">
       <div class="screen">
         <button class="theme-switch" onclick="toggleTheme()" title="تغییر تم">
@@ -27,11 +82,7 @@
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
           </svg>
         </button>
-
-        <div class="header">
-          <h1>SEO Optimizer</h1>
-        </div>
-
+        <div class="header"><h1>SEO Optimizer</h1></div>
         <div class="tabs-container">
           <button class="tab-btn active" onclick="switchTab('analyze')">
             📊 تحلیل
@@ -49,7 +100,6 @@
             📥 دانلود
           </button>
         </div>
-
         <div id="analyzeTab" class="tab-content active">
           <div class="action-buttons" style="margin-bottom: 15px">
             <label class="file-input-label" for="fileInput">
@@ -65,21 +115,17 @@
               📝 متن نمونه
             </button>
           </div>
-
           <div class="input-section liquid-glass">
             <textarea
               id="textInput"
               placeholder="متن خود را اینجا وارد کنید..."
             ></textarea>
           </div>
-
           <button class="btn-analyze" onclick="analyzeSEO()">
             🔍 تجزیه و تحلیل پیشرفته SEO
           </button>
-
           <div id="results" class="results-container"></div>
         </div>
-
         <div id="compareTab" class="tab-content">
           <div class="input-section liquid-glass" style="margin-bottom: 15px">
             <textarea
@@ -100,7 +146,6 @@
           </button>
           <div id="compareResults" class="results-container"></div>
         </div>
-
         <div id="visualTab" class="tab-content">
           <div class="result-card liquid-glass">
             <h3 style="text-align: center; margin-bottom: 15px">
@@ -112,14 +157,12 @@
               </p>
             </div>
           </div>
-
           <div class="result-card liquid-glass chart-container">
             <h3 style="text-align: center; margin-bottom: 15px">
               📊 نمودار تراکم کلمات کلیدی
             </h3>
             <canvas id="densityChart" class="chart-canvas"></canvas>
           </div>
-
           <div class="result-card liquid-glass">
             <h3 style="text-align: center; margin-bottom: 15px">
               🎯 پیشرفت امتیاز SEO
@@ -150,7 +193,6 @@
               </svg>
             </div>
           </div>
-
           <div class="result-card liquid-glass">
             <h3 style="text-align: center; margin-bottom: 15px">
               #️⃣ پیشنهاد هشتگ
@@ -168,7 +210,6 @@
             </div>
           </div>
         </div>
-
         <div id="historyTab" class="tab-content">
           <div id="historyList" class="results-container">
             <div class="result-card liquid-glass">
@@ -178,29 +219,23 @@
             </div>
           </div>
         </div>
-
         <div id="exportTab" class="tab-content">
           <div class="result-card liquid-glass export-section">
             <h3 style="text-align: center; margin-bottom: 20px">
-              📥 صادرات نتایج
+              📥 دانلود نتایج
             </h3>
-
             <button class="btn-export" onclick="exportToPDF()">
               📄 دانلود PDF
             </button>
-
             <button class="btn-export" onclick="exportToJSON()">
               📋 دانلود JSON
             </button>
-
             <button class="btn-export" onclick="exportToCSV()">
               📊 دانلود CSV
             </button>
-
             <button class="btn-export" onclick="copyAllResults()">
               📋 کپی همه نتایج
             </button>
-
             <div
               id="exportMessage"
               style="
@@ -214,7 +249,6 @@
             </div>
           </div>
         </div>
-
         <button
           class="btn-clear"
           onclick="clearAll()"

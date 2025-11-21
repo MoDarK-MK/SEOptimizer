@@ -754,3 +754,136 @@ input[type="file"] {
     overflow-x: auto;
   }
 }
+
+.settings-icon {
+  position: fixed;
+  top: 38px;
+  right: 36px;
+  background: rgba(26, 95, 74, 0.6);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  box-shadow: 0 4px 32px rgba(30, 96, 64, 0.25);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  backdrop-filter: blur(8px);
+}
+.settings-icon:hover {
+  background: #2ecc71;
+  transform: scale(1.08);
+}
+.settings-panel {
+  position: fixed;
+  top: 85px;
+  right: 24px;
+  width: 320px;
+  background: rgba(30, 52, 40, 0.92);
+  border-radius: 18px;
+  box-shadow: 0 8px 48px rgba(20, 80, 64, 0.13);
+  padding: 34px 32px;
+  z-index: 1150;
+  display: none;
+  direction: rtl;
+  color: #fff;
+  font-family: Vazir, sans-serif;
+  animation: fadeIn 0.4s;
+  backdrop-filter: blur(14px);
+}
+.settings-panel.active {
+  display: block;
+}
+.settings-panel h2 {
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+.setting-row {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.setting-row label {
+  font-size: 15px;
+  margin-left: 16px;
+}
+.settings-panel .btn-action {
+  width: 45%;
+  margin: 10px 2% 0 2%;
+}
+.settings-icon {
+  position: fixed;
+  top: 34px;
+  right: 36px;
+  background: rgba(46, 204, 113, 0.22);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+  box-shadow: 0 4px 24px rgba(30, 96, 64, 0.15);
+  backdrop-filter: blur(8px);
+}
+.settings-icon:hover {
+  background: #2ecc71;
+  box-shadow: 0 8px 48px #2ecc7166;
+  transform: scale(1.09) rotate(6deg);
+}
+.settings-icon svg {
+  transition: transform 0.4s;
+}
+.settings-icon:hover svg {
+  transform: rotate(18deg) scale(1.08);
+}
+
+.settings-panel .btn-action {
+  margin: 12px 0 0 0;
+  width: 100%;
+  font-family: Vazir;
+  font-size: 16px;
+}
+:root {
+  --user-card-bg: rgba(26, 95, 74, 0.3);
+  --user-btn-bg: #2ecc71;
+  --user-font: #f5f5f5;
+  --user-header: #fff;
+  --user-tabs-bg: rgba(26, 95, 74, 0.3);
+  --user-scroll: #2ecc71;
+  --user-cloud: #2ecc71;
+  --user-progress: linear-gradient(90deg, #2ecc71, #27ae60);
+}
+.liquid-glass {
+  background: var(--user-card-bg) !important;
+}
+.btn-analyze,
+.btn-action,
+.btn-clear,
+.btn-export {
+  background: var(--user-btn-bg) !important;
+  color: var(--user-font) !important;
+}
+.header h1 {
+  color: var(--user-header) !important;
+}
+.tab-btn {
+  background: var(--user-tabs-bg) !important;
+}
+body {
+  color: var(--user-font) !important;
+}
+.screen::-webkit-scrollbar-thumb {
+  background: var(--user-scroll) !important;
+}
+.word-cloud-item {
+  color: var(--user-cloud) !important;
+}
+.progress-fill {
+  background: var(--user-progress) !important;
+}
