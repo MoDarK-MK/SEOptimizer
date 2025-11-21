@@ -480,77 +480,54 @@ function toggleSettingsPanel() {
 }
 
 function applyColorsFromStorage() {
-  const bg = localStorage.getItem("color-bg") || "#0a0a0a";
-  const card = localStorage.getItem("color-card") || "rgba(26,95,74,0.3)";
-  const btn = localStorage.getItem("color-btn") || "#2ecc71";
-  const font = localStorage.getItem("color-font") || "#f5f5f5";
-  const header = localStorage.getItem("color-header") || "#f5f5f5";
-  const tabs = localStorage.getItem("color-tabs") || "rgba(26,95,74,0.3)";
-  const scroll = localStorage.getItem("color-scroll") || "#2ecc71";
-  const cloud = localStorage.getItem("color-cloud") || "#2ecc71";
-  const progress = localStorage.getItem("color-progress") || "#2ecc71";
+  const root = document.documentElement;
+  root.style.setProperty("--bg", localStorage.getItem("color-bg") || "#0a0a0a");
+  root.style.setProperty(
+    "--card",
+    localStorage.getItem("color-card") || "rgba(26,95,74,0.3)"
+  );
+  root.style.setProperty(
+    "--btn",
+    localStorage.getItem("color-btn") || "#2ecc71"
+  );
+  root.style.setProperty(
+    "--font",
+    localStorage.getItem("color-font") || "#f5f5f5"
+  );
+  root.style.setProperty(
+    "--header",
+    localStorage.getItem("color-header") || "#f5f5f5"
+  );
+  root.style.setProperty(
+    "--tabs",
+    localStorage.getItem("color-tabs") || "rgba(26,95,74,0.3)"
+  );
+  root.style.setProperty(
+    "--cloud",
+    localStorage.getItem("color-cloud") || "#2ecc71"
+  );
+  root.style.setProperty(
+    "--progress",
+    localStorage.getItem("color-progress") || "#2ecc71"
+  );
 
-  document.body.style.background = bg;
-
-  document
-    .querySelectorAll(".liquid-glass, .stat-card, .result-card, .score-card")
-    .forEach((el) => {
-      el.style.background = card;
-    });
-  document
-    .querySelectorAll(
-      ".btn-analyze, .btn-action, .btn-clear, .btn-export, .copy-btn"
-    )
-    .forEach((el) => {
-      el.style.background = btn;
-    });
-  document.body.style.color = font;
-  document.querySelectorAll(".header h1").forEach((el) => {
-    el.style.color = header;
-  });
-  document.querySelectorAll(".tab-btn").forEach((el) => {
-    el.style.background = tabs;
-  });
-  document.querySelectorAll(".word-cloud-item").forEach((el) => {
-    el.style.color = cloud;
-  });
-  document.querySelectorAll(".progress-fill").forEach((el) => {
-    el.style.background = progress;
-  });
-
-  document.getElementById("bgColorPicker").value = bg;
-  document.getElementById("cardColorPicker").value = card.startsWith("rgba")
-    ? "#1a5f4a"
-    : card;
-  document.getElementById("buttonColorPicker").value = btn;
-  document.getElementById("fontColorPicker").value = font;
-  document.getElementById("headerColorPicker").value = header;
-  document.getElementById("tabsColorPicker").value = tabs.startsWith("rgba")
-    ? "#1a5f4a"
-    : tabs;
-  document.getElementById("scrollColorPicker").value = scroll;
-  document.getElementById("cloudColorPicker").value = cloud;
-  document.getElementById("progressColorPicker").value = progress;
+  document.getElementById("bgColorPicker").value =
+    localStorage.getItem("color-bg") || "#0a0a0a";
+  document.getElementById("cardColorPicker").value =
+    localStorage.getItem("color-card") || "#1a5f4a";
+  document.getElementById("buttonColorPicker").value =
+    localStorage.getItem("color-btn") || "#2ecc71";
+  document.getElementById("fontColorPicker").value =
+    localStorage.getItem("color-font") || "#f5f5f5";
+  document.getElementById("headerColorPicker").value =
+    localStorage.getItem("color-header") || "#f5f5f5";
+  document.getElementById("tabsColorPicker").value =
+    localStorage.getItem("color-tabs") || "#1a5f4a";
+  document.getElementById("cloudColorPicker").value =
+    localStorage.getItem("color-cloud") || "#2ecc71";
+  document.getElementById("progressColorPicker").value =
+    localStorage.getItem("color-progress") || "#2ecc71";
 }
-
-[
-  ["bgColorPicker", "color-bg"],
-  ["cardColorPicker", "color-card"],
-  ["buttonColorPicker", "color-btn"],
-  ["fontColorPicker", "color-font"],
-  ["headerColorPicker", "color-header"],
-  ["tabsColorPicker", "color-tabs"],
-  ["scrollColorPicker", "color-scroll"],
-  ["cloudColorPicker", "color-cloud"],
-  ["progressColorPicker", "color-progress"],
-].forEach(([id, key]) => {
-  const el = document.getElementById(id);
-  if (el)
-    el.addEventListener("input", (e) => {
-      localStorage.setItem(key, e.target.value);
-      applyColorsFromStorage();
-    });
-});
 
 function resetColors() {
   [
