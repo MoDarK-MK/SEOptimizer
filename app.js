@@ -40,7 +40,7 @@ function analyzeSEO() {
     saveToHistory(analysisData);
     displayResults(analysisData);
     updateVisualizations(analysisData);
-    applyColorsFromStorage();
+    applyGradientColors();
   } catch (error) {
     alert("خطا در تحلیل متن: " + error.message);
   }
@@ -132,7 +132,7 @@ function displayResults(data) {
   resultsDiv.innerHTML = html;
   resultsDiv.classList.add("show");
   clearBtn.style.display = "block";
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function updateVisualizations(data) {
@@ -140,7 +140,7 @@ function updateVisualizations(data) {
   updateProgressRing(data.score);
   updateHashtags(data.keywords);
   updateDensityChart(data.keywordDensities);
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function updateWordCloud(keywords) {
@@ -158,7 +158,7 @@ function updateWordCloud(keywords) {
       return `<div class="word-cloud-item" style="font-size:${size}px;animation-delay:${delay}s;">${kw[0]}</div>`;
     })
     .join("");
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function updateProgressRing(score) {
@@ -170,7 +170,7 @@ function updateProgressRing(score) {
   setTimeout(() => {
     circle.style.strokeDashoffset = offset;
     text.textContent = score;
-    applyColorsFromStorage();
+    applyGradientColors();
   }, 100);
 }
 
@@ -188,7 +188,7 @@ function updateHashtags(keywords) {
         `<div class="hashtag-item" onclick="copyToClipboard('#${kw[0]}', this)">#${kw[0]}</div>`
     )
     .join("");
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function updateDensityChart(keywordDensities) {
@@ -212,7 +212,7 @@ function updateDensityChart(keywordDensities) {
     ctx.fillText(kw.word, x + barWidth / 2, canvas.height - 25);
     ctx.fillText(kw.density + "%", x + barWidth / 2, y - 5);
   });
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function compareTexts() {
@@ -225,7 +225,7 @@ function compareTexts() {
   try {
     const comparison = analyzer.compare(text1, text2);
     displayComparisonResults(comparison);
-    applyColorsFromStorage();
+    applyGradientColors();
   } catch (error) {
     alert("خطا در مقایسه متن‌ها: " + error.message);
   }
@@ -254,7 +254,7 @@ function displayComparisonResults(comparison) {
     </div>
   `;
   compareResults.classList.add("show");
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function saveToHistory(data) {
@@ -302,10 +302,9 @@ function loadHistory() {
   `
     )
     .join("");
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
-// دانلودها و اشتراک
 function exportToPDF() {
   if (!currentAnalysisData) {
     alert("⚠️ ابتدا یک متن را تحلیل کنید!");
@@ -348,7 +347,7 @@ ${currentAnalysisData.suggestions
   a.download = `seo-report-${Date.now()}.txt`;
   a.click();
   showExportMessage();
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function exportToJSON() {
@@ -365,7 +364,7 @@ function exportToJSON() {
   a.download = `seo-analysis-${Date.now()}.json`;
   a.click();
   showExportMessage();
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function exportToCSV() {
@@ -390,7 +389,7 @@ function exportToCSV() {
   a.download = `seo-data-${Date.now()}.csv`;
   a.click();
   showExportMessage();
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function copyAllResults() {
@@ -412,7 +411,7 @@ ${currentAnalysisData.metaDescription}
 ${currentAnalysisData.keywords.map((k) => `${k[0]} (${k[1]})`).join(", ")}
   `;
   navigator.clipboard.writeText(text).then(showExportMessage);
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function copyToClipboard(text, button) {
@@ -423,7 +422,7 @@ function copyToClipboard(text, button) {
       button.innerHTML = originalText;
     }, 2000);
   });
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function showExportMessage() {
@@ -432,7 +431,7 @@ function showExportMessage() {
   setTimeout(() => {
     msg.style.display = "none";
   }, 3000);
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function toggleTheme() {
@@ -448,7 +447,7 @@ function toggleTheme() {
     moonIcon.style.display = "block";
     localStorage.setItem("theme", "dark");
   }
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 function clearAll() {
@@ -462,7 +461,7 @@ function clearAll() {
   document.getElementById("hashtagList").innerHTML =
     '<p style="text-align:center;color:rgba(245,245,245,0.7);width:100%;">ابتدا یک متن را تحلیل کنید</p>';
   document.getElementById("scoreText").textContent = "0";
-  applyColorsFromStorage();
+  applyGradientColors();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -472,79 +471,46 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("theme-icon-sun").style.display = "block";
     document.getElementById("theme-icon-moon").style.display = "none";
   }
-  applyColorsFromStorage();
+  applyGradientColors();
 });
 
-function toggleSettingsPanel() {
-  document.getElementById("settingsPanel").classList.toggle("active");
-}
+function applyGradientColors() {
+  if (
+    document.getElementById("settingsBg1") &&
+    document.getElementById("settingsBg2") &&
+    document.getElementById("settingsCard1") &&
+    document.getElementById("settingsCard2") &&
+    document.getElementById("settingsBtn1") &&
+    document.getElementById("settingsBtn2") &&
+    document.getElementById("settingsFont") &&
+    document.getElementById("settingsHeader")
+  ) {
+    const bg1 = document.getElementById("settingsBg1").value;
+    const bg2 = document.getElementById("settingsBg2").value;
+    const card1 = document.getElementById("settingsCard1").value;
+    const card2 = document.getElementById("settingsCard2").value;
+    const btn1 = document.getElementById("settingsBtn1").value;
+    const btn2 = document.getElementById("settingsBtn2").value;
+    const font = document.getElementById("settingsFont").value;
+    const header = document.getElementById("settingsHeader").value;
 
-function applyColorsFromStorage() {
-  const root = document.documentElement;
-  root.style.setProperty("--bg", localStorage.getItem("color-bg") || "#0a0a0a");
-  root.style.setProperty(
-    "--card",
-    localStorage.getItem("color-card") || "rgba(26,95,74,0.3)"
-  );
-  root.style.setProperty(
-    "--btn",
-    localStorage.getItem("color-btn") || "#2ecc71"
-  );
-  root.style.setProperty(
-    "--font",
-    localStorage.getItem("color-font") || "#f5f5f5"
-  );
-  root.style.setProperty(
-    "--header",
-    localStorage.getItem("color-header") || "#f5f5f5"
-  );
-  root.style.setProperty(
-    "--tabs",
-    localStorage.getItem("color-tabs") || "rgba(26,95,74,0.3)"
-  );
-  root.style.setProperty(
-    "--cloud",
-    localStorage.getItem("color-cloud") || "#2ecc71"
-  );
-  root.style.setProperty(
-    "--progress",
-    localStorage.getItem("color-progress") || "#2ecc71"
-  );
+    const bgVal =
+      bg1 && bg2 && bg1 !== bg2
+        ? `linear-gradient(135deg,${bg1},${bg2})`
+        : bg1 || "#0a0a0a";
+    const cardVal =
+      card1 && card2 && card1 !== card2
+        ? `linear-gradient(135deg,${card1},${card2})`
+        : card1 || "#1a5f4a";
+    const btnVal =
+      btn1 && btn2 && btn1 !== btn2
+        ? `linear-gradient(90deg,${btn1},${btn2})`
+        : btn1 || "#2ecc71";
 
-  document.getElementById("bgColorPicker").value =
-    localStorage.getItem("color-bg") || "#0a0a0a";
-  document.getElementById("cardColorPicker").value =
-    localStorage.getItem("color-card") || "#1a5f4a";
-  document.getElementById("buttonColorPicker").value =
-    localStorage.getItem("color-btn") || "#2ecc71";
-  document.getElementById("fontColorPicker").value =
-    localStorage.getItem("color-font") || "#f5f5f5";
-  document.getElementById("headerColorPicker").value =
-    localStorage.getItem("color-header") || "#f5f5f5";
-  document.getElementById("tabsColorPicker").value =
-    localStorage.getItem("color-tabs") || "#1a5f4a";
-  document.getElementById("cloudColorPicker").value =
-    localStorage.getItem("color-cloud") || "#2ecc71";
-  document.getElementById("progressColorPicker").value =
-    localStorage.getItem("color-progress") || "#2ecc71";
-}
-
-function resetColors() {
-  [
-    "color-bg",
-    "color-card",
-    "color-btn",
-    "color-font",
-    "color-header",
-    "color-tabs",
-    "color-scroll",
-    "color-cloud",
-    "color-progress",
-  ].forEach((k) => localStorage.removeItem(k));
-  applyColorsFromStorage();
-}
-function saveSettings() {
-  applyColorsFromStorage();
-  toggleSettingsPanel();
-  alert("تنظیمات ذخیره شد و اعمال گردید!");
+    document.documentElement.style.setProperty("--bg", bgVal);
+    document.documentElement.style.setProperty("--card", cardVal);
+    document.documentElement.style.setProperty("--btn", btnVal);
+    document.documentElement.style.setProperty("--font", font || "#f5f5f5");
+    document.documentElement.style.setProperty("--header", header || "#f5f5f5");
+  }
 }

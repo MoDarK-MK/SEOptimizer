@@ -1,12 +1,19 @@
 @font-face {
-  font-family: "Vazir";
+  font-family: "IRANYekan";
   src: url(IRANYekanRegular.ttf) format("woff2"),
     url(IRANYekanRegular.ttf) format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
-
+body,
+input,
+textarea,
+button,
+select {
+  font-family: "IRANYekan", "Vazir", "Segoe UI", Tahoma, Geneva, Verdana,
+    sans-serif;
+}
 :root {
   --bg: #0a0a0a;
   --card: rgba(26, 95, 74, 0.3);
@@ -25,7 +32,7 @@
 }
 
 body {
-  font-family: "Vazir", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "IRANYekan", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: var(--bg);
   color: var(--font);
   min-height: 100vh;
@@ -177,7 +184,7 @@ textarea {
   border: none;
   outline: none;
   resize: vertical;
-  font-family: "Vazir", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "IRANYekan", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: transparent;
 }
 textarea::placeholder {
@@ -196,7 +203,7 @@ textarea::placeholder {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: "Vazir", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "IRANYekan", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 /* If you want different padding and font-sizes for specific buttons, set them here: */
 .btn-analyze {
@@ -469,7 +476,7 @@ textarea::placeholder {
   color: var(--font);
   font-size: 14px;
   text-align: center;
-  font-family: "Vazir", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "IRANYekan", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .file-input-label:hover {
   background: rgba(26, 95, 74, 0.6);
@@ -660,7 +667,7 @@ input[type="file"] {
   display: none;
   direction: rtl;
   color: #fff;
-  font-family: Vazir, sans-serif;
+  font-family: IRANYekan, sans-serif;
   animation: fadeIn 0.4s;
   backdrop-filter: blur(14px);
 }

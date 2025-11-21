@@ -1,154 +1,284 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="settings.css" />
-  <script src="seo-analyzer.js"></script>
-  <script src="app.js"></script>
-  <script src="settings.js"></script>
-  <title>SEO Optimizer</title>
-</head>
-<body>
-  <div class="site-settings-icon" onclick="toggleSiteSettings()" title="تنظیمات سایت">
-    <img src="icon1.png" alt="تنظیمات" />
-  </div>
-
-  <div class="settings-backdrop" id="settingsBackdrop" onclick="toggleSiteSettings()" style="display: none;"></div>
-
-  <div class="site-settings-panel liquid-glass" id="siteSettingsPanel">
-    <div class="settings-panel-header">
-      <img src="icon1.png" alt="" class="settings-panel-header-icon" />
-      <span class="settings-panel-title">تنظیمات رنگ و ظاهر سایت</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="settings.css" />
+    <script src="seo-analyzer.js"></script>
+    <script src="app.js"></script>
+    <script src="settings.js"></script>
+    <title>SEO Optimizer</title>
+  </head>
+  <body>
+    <div
+      class="site-settings-icon"
+      onclick="toggleSiteSettings()"
+      title="تنظیمات سایت"
+    >
+      <img src="icon1.png" alt="تنظیمات" />
     </div>
-    <div class="settings-panel-body">
-      <div class="setting-row">
-        <label for="settingsBg">رنگ پس‌زمینه</label>
-        <input type="color" id="settingsBg" />
-      </div>
-      <div class="setting-row">
-        <label for="settingsCard">رنگ کارت‌ها</label>
-        <input type="color" id="settingsCard" />
-      </div>
-      <div class="setting-row">
-        <label for="settingsBtn">رنگ دکمه‌ها</label>
-        <input type="color" id="settingsBtn" />
-      </div>
-      <div class="setting-row">
-        <label for="settingsFont">رنگ فونت</label>
-        <input type="color" id="settingsFont" />
-      </div>
-      <div class="setting-row">
-        <label for="settingsHeader">رنگ هدر</label>
-        <input type="color" id="settingsHeader" />
-      </div>
-    </div>
-    <div class="settings-panel-footer">
-      <button class="site-settings-btn" onclick="saveSiteSettings()">ذخیره</button>
-      <button class="site-settings-btn" onclick="resetSiteSettings()">ریست</button>
-      <button class="site-settings-btn" onclick="toggleSiteSettings()">بستن</button>
-    </div>
-  </div>
 
-  <div class="iphone-container">
-    <div class="screen">
-      <button class="theme-switch" onclick="toggleTheme()" title="تغییر تم">
-        <svg id="theme-icon-sun" viewBox="0 0 24 24" style="display: none">
-          ircle cx="12" cycy="12" r="5" />
-          <line x1="12" y1="1" x2="12" y2="3" />
-          <line x1="12" y1="21" x2="12" y2="23" />
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-          <line x1="1" y1="12" x2="3" y2="12" />
-          <line x1="21" y1="12" x2="23" y2="12" />
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-        </svg>
-        <svg id="theme-icon-moon" viewBox="0 0 24 24">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
-      </button>
-      <div class="header"><h1>SEO Optimizer</h1></div>
-      <div class="tabs-container">
-        <button class="tab-btn active" onclick="switchTab('analyze')">📊 تحلیل</button>
-        <button class="tab-btn" onclick="switchTab('visual')">📈 نمودارها</button>
-        <button class="tab-btn" onclick="switchTab('compare')">⚖️ مقایسه</button>
-        <button class="tab-btn" onclick="switchTab('history')">📜 تاریخچه</button>
-        <button class="tab-btn" onclick="switchTab('export')">📥 دانلود</button>
+    <div
+      class="settings-backdrop"
+      id="settingsBackdrop"
+      onclick="toggleSiteSettings()"
+      style="display: none"
+    ></div>
+
+    <div class="site-settings-panel liquid-glass" id="siteSettingsPanel">
+      <div class="settings-panel-header">
+        <img src="icon1.png" alt="" class="settings-panel-header-icon" />
+        <span class="settings-panel-title">تنظیمات رنگ و گرادیانت سایت</span>
       </div>
-      <div id="analyzeTab" class="tab-content active">
-        <div class="action-buttons" style="margin-bottom: 15px">
-          <label class="file-input-label" for="fileInput">
-            📁 بارگذاری فایل
-            <input type="file" id="fileInput" accept=".txt" onchange="loadFile(event)" />
-          </label>
-          <button class="btn-action" onclick="loadSampleText()">📝 متن نمونه</button>
-        </div>
-        <div class="input-section liquid-glass">
-          <textarea id="textInput" placeholder="متن خود را اینجا وارد کنید..."></textarea>
-        </div>
-        <button class="btn-analyze" onclick="analyzeSEO()">🔍 تجزیه و تحلیل پیشرفته SEO</button>
-        <div id="results" class="results-container"></div>
-      </div>
-      <div id="compareTab" class="tab-content">
-        <div class="input-section liquid-glass" style="margin-bottom: 15px">
-          <textarea id="textInput1" placeholder="متن اول را وارد کنید..." style="min-height: 100px"></textarea>
-        </div>
-        <div class="input-section liquid-glass" style="margin-bottom: 15px">
-          <textarea id="textInput2" placeholder="متن دوم را وارد کنید..." style="min-height: 100px"></textarea>
-        </div>
-        <button class="btn-analyze" onclick="compareTexts()">⚖️ مقایسه متن‌ها</button>
-        <div id="compareResults" class="results-container"></div>
-      </div>
-      <div id="visualTab" class="tab-content">
-        <div class="result-card liquid-glass">
-          <h3 style="text-align: center; margin-bottom: 15px">☁️ ابر کلمات کلیدی</h3>
-          <div id="wordCloud" class="word-cloud">
-            <p style="text-align: center; color: rgba(245, 245, 245, 0.7)">ابتدا یک متن را تحلیل کنید</p>
+      <form id="settingsForm">
+        <div class="settings-panel-body">
+          <div class="setting-row">
+            <label>پس‌زمینه:</label>
+            <span class="gradient-input-group">
+              <input type="color" id="settingsBg1" />
+              <span class="gradient-arrow">&#8594;</span>
+              <input type="color" id="settingsBg2" />
+            </span>
+            <span class="gradient-preview" id="bgPreview"></span>
+          </div>
+          <div class="setting-row">
+            <label>کارت:</label>
+            <span class="gradient-input-group">
+              <input type="color" id="settingsCard1" />
+              <span class="gradient-arrow">&#8594;</span>
+              <input type="color" id="settingsCard2" />
+            </span>
+            <span class="gradient-preview" id="cardPreview"></span>
+          </div>
+          <div class="setting-row">
+            <label>دکمه:</label>
+            <span class="gradient-input-group">
+              <input type="color" id="settingsBtn1" />
+              <span class="gradient-arrow">&#8594;</span>
+              <input type="color" id="settingsBtn2" />
+            </span>
+            <span class="gradient-preview" id="btnPreview"></span>
+          </div>
+          <div class="setting-row">
+            <label>فونت:</label>
+            <input type="color" id="settingsFont" />
+            <span class="color-preview" id="fontPreview"></span>
+          </div>
+          <div class="setting-row">
+            <label>هدر:</label>
+            <input type="color" id="settingsHeader" />
+            <span class="color-preview" id="headerPreview"></span>
           </div>
         </div>
-        <div class="result-card liquid-glass chart-container">
-          <h3 style="text-align: center; margin-bottom: 15px">📊 نمودار تراکم کلمات کلیدی</h3>
-          nvas id="densityChart" class="chartart-canvas"></canvas>
+        <div class="settings-panel-footer">
+          <button type="button" class="site-settings-btn" id="saveBtn">
+            ذخیره
+          </button>
+          <button type="button" class="site-settings-btn" id="resetBtn">
+            ریست
+          </button>
+          <button type="button" class="site-settings-btn" id="closeBtn">
+            بستن
+          </button>
         </div>
-        <div class="result-card liquid-glass">
-          <h3 style="text-align: center; margin-bottom: 15px">🎯 پیشرفت امتیاز SEO</h3>
-          <div style="text-align: center">
-            <svg class="progress-ring">
-              <rcle class="progress-ring-circle" stroke="#2ecc71" stroke-width="8" fill="transparent" r="52" cx="60"0" cy="60"/>
-              <text id="scoreText" x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#f5f5f5" font-size="24" font-weight="bold">0</text>
-            </svg>
+      </form>
+    </div>
+
+    <div class="iphone-container">
+      <div class="screen">
+        <button class="theme-switch" onclick="toggleTheme()" title="تغییر تم">
+          <svg id="theme-icon-sun" viewBox="0 0 24 24" style="display: none">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg id="theme-icon-moon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+        <div class="header"><h1>SEO Optimizer</h1></div>
+        <div class="tabs-container">
+          <button class="tab-btn active" onclick="switchTab('analyze')">
+            📊 تحلیل
+          </button>
+          <button class="tab-btn" onclick="switchTab('visual')">
+            📈 نمودارها
+          </button>
+          <button class="tab-btn" onclick="switchTab('compare')">
+            ⚖️ مقایسه
+          </button>
+          <button class="tab-btn" onclick="switchTab('history')">
+            📜 تاریخچه
+          </button>
+          <button class="tab-btn" onclick="switchTab('export')">
+            📥 دانلود
+          </button>
+        </div>
+        <div id="analyzeTab" class="tab-content active">
+          <div class="action-buttons" style="margin-bottom: 15px">
+            <label class="file-input-label" for="fileInput">
+              📁 بارگذاری فایل
+              <input
+                type="file"
+                id="fileInput"
+                accept=".txt"
+                onchange="loadFile(event)"
+              />
+            </label>
+            <button class="btn-action" onclick="loadSampleText()">
+              📝 متن نمونه
+            </button>
           </div>
-        </div>
-        <div class="result-card liquid-glass">
-          <h3 style="text-align: center; margin-bottom: 15px">#️⃣ پیشنهاد هشتگ</h3>
-          <div id="hashtagList" class="hashtag-list">
-            <p style="text-align: center; color: rgba(245, 245, 245, 0.7); width: 100%;">ابتدا یک متن را تحلیل کنید</p>
+          <div class="input-section liquid-glass">
+            <textarea
+              id="textInput"
+              placeholder="متن خود را اینجا وارد کنید..."
+            ></textarea>
           </div>
+          <button class="btn-analyze" onclick="analyzeSEO()">
+            🔍 تجزیه و تحلیل پیشرفته SEO
+          </button>
+          <div id="results" class="results-container"></div>
         </div>
-      </div>
-      <div id="historyTab" class="tab-content">
-        <div id="historyList" class="results-container">
+        <div id="compareTab" class="tab-content">
+          <div class="input-section liquid-glass" style="margin-bottom: 15px">
+            <textarea
+              id="textInput1"
+              placeholder="متن اول را وارد کنید..."
+              style="min-height: 100px"
+            ></textarea>
+          </div>
+          <div class="input-section liquid-glass" style="margin-bottom: 15px">
+            <textarea
+              id="textInput2"
+              placeholder="متن دوم را وارد کنید..."
+              style="min-height: 100px"
+            ></textarea>
+          </div>
+          <button class="btn-analyze" onclick="compareTexts()">
+            ⚖️ مقایسه متن‌ها
+          </button>
+          <div id="compareResults" class="results-container"></div>
+        </div>
+        <div id="visualTab" class="tab-content">
           <div class="result-card liquid-glass">
-            <p style="text-align: center; color: rgba(245, 245, 245, 0.7)">
-              هنوز تحلیلی ذخیره نشده است
-            </p>
+            <h3 style="text-align: center; margin-bottom: 15px">
+              ☁️ ابر کلمات کلیدی
+            </h3>
+            <div id="wordCloud" class="word-cloud">
+              <p style="text-align: center; color: rgba(245, 245, 245, 0.7)">
+                ابتدا یک متن را تحلیل کنید
+              </p>
+            </div>
+          </div>
+          <div class="result-card liquid-glass chart-container">
+            <h3 style="text-align: center; margin-bottom: 15px">
+              📊 نمودار تراکم کلمات کلیدی
+            </h3>
+            <canvas id="densityChart" class="chart-canvas"></canvas>
+          </div>
+          <div class="result-card liquid-glass">
+            <h3 style="text-align: center; margin-bottom: 15px">
+              🎯 پیشرفت امتیاز SEO
+            </h3>
+            <div style="text-align: center">
+              <svg class="progress-ring">
+                <circle
+                  class="progress-ring-circle"
+                  stroke="#2ecc71"
+                  stroke-width="8"
+                  fill="transparent"
+                  r="52"
+                  cx="60"
+                  cy="60"
+                />
+                <text
+                  id="scoreText"
+                  x="50%"
+                  y="50%"
+                  text-anchor="middle"
+                  dy=".3em"
+                  fill="#f5f5f5"
+                  font-size="24"
+                  font-weight="bold"
+                >
+                  0
+                </text>
+              </svg>
+            </div>
+          </div>
+          <div class="result-card liquid-glass">
+            <h3 style="text-align: center; margin-bottom: 15px">
+              #️⃣ پیشنهاد هشتگ
+            </h3>
+            <div id="hashtagList" class="hashtag-list">
+              <p
+                style="
+                  text-align: center;
+                  color: rgba(245, 245, 245, 0.7);
+                  width: 100%;
+                "
+              >
+                ابتدا یک متن را تحلیل کنید
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      <div id="exportTab" class="tab-content">
-        <div class="result-card liquid-glass export-section">
-          <h3 style="text-align: center; margin-bottom: 20px">📥 دانلود نتایج</h3>
-          <button class="btn-export" onclick="exportToPDF()">📄 دانلود PDF</button>
-          <button class="btn-export" onclick="exportToJSON()">📋 دانلود JSON</button>
-          <button class="btn-export" onclick="exportToCSV()">📊 دانلود CSV</button>
-          <button class="btn-export" onclick="copyAllResults()">📋 کپی همه نتایج</button>
-          <div id="exportMessage" style="text-align: center; margin-top: 15px; color: #2ecc71; display: none;">✓ عملیات با موفقیت انجام شد!</div>
+        <div id="historyTab" class="tab-content">
+          <div id="historyList" class="results-container">
+            <div class="result-card liquid-glass">
+              <p style="text-align: center; color: rgba(245, 245, 245, 0.7)">
+                هنوز تحلیلی ذخیره نشده است
+              </p>
+            </div>
+          </div>
         </div>
+        <div id="exportTab" class="tab-content">
+          <div class="result-card liquid-glass export-section">
+            <h3 style="text-align: center; margin-bottom: 20px">
+              📥 دانلود نتایج
+            </h3>
+            <button class="btn-export" onclick="exportToPDF()">
+              📄 دانلود PDF
+            </button>
+            <button class="btn-export" onclick="exportToJSON()">
+              📋 دانلود JSON
+            </button>
+            <button class="btn-export" onclick="exportToCSV()">
+              📊 دانلود CSV
+            </button>
+            <button class="btn-export" onclick="copyAllResults()">
+              📋 کپی همه نتایج
+            </button>
+            <div
+              id="exportMessage"
+              style="
+                text-align: center;
+                margin-top: 15px;
+                color: #2ecc71;
+                display: none;
+              "
+            >
+              ✓ عملیات با موفقیت انجام شد!
+            </div>
+          </div>
+        </div>
+        <button
+          class="btn-clear"
+          onclick="clearAll()"
+          style="display: none"
+          id="clearBtn"
+        >
+          🗑️ پاک کردن
+        </button>
       </div>
-      <button class="btn-clear" onclick="clearAll()" style="display: none" id="clearBtn">🗑️ پاک کردن</button>
     </div>
-  </div>
-</body>
+  </body>
 </html>

@@ -5,50 +5,67 @@
 >
   <img src="icon1.png" alt="تنظیمات" />
 </div>
-
 <div
   class="settings-backdrop"
   id="settingsBackdrop"
   onclick="toggleSiteSettings()"
   style="display: none"
 ></div>
-
 <div class="site-settings-panel liquid-glass" id="siteSettingsPanel">
   <div class="settings-panel-header">
     <img src="icon1.png" alt="" class="settings-panel-header-icon" />
-    <span class="settings-panel-title">تنظیمات رنگ و ظاهر سایت</span>
+    <span class="settings-panel-title">تنظیمات رنگ و گرادیانت سایت</span>
   </div>
-  <div class="settings-panel-body">
-    <div class="setting-row">
-      <label for="settingsBg">رنگ پس‌زمینه</label>
-      <input type="color" id="settingsBg" />
+  <form id="settingsForm">
+    <div class="settings-panel-body">
+      <div class="setting-row">
+        <label>پس‌زمینه:</label>
+        <span class="gradient-input-group">
+          <input type="color" id="settingsBg1" />
+          <span class="gradient-arrow">&#8594;</span>
+          <input type="color" id="settingsBg2" />
+        </span>
+        <span class="gradient-preview" id="bgPreview"></span>
+      </div>
+      <div class="setting-row">
+        <label>کارت:</label>
+        <span class="gradient-input-group">
+          <input type="color" id="settingsCard1" />
+          <span class="gradient-arrow">&#8594;</span>
+          <input type="color" id="settingsCard2" />
+        </span>
+        <span class="gradient-preview" id="cardPreview"></span>
+      </div>
+      <div class="setting-row">
+        <label>دکمه:</label>
+        <span class="gradient-input-group">
+          <input type="color" id="settingsBtn1" />
+          <span class="gradient-arrow">&#8594;</span>
+          <input type="color" id="settingsBtn2" />
+        </span>
+        <span class="gradient-preview" id="btnPreview"></span>
+      </div>
+      <div class="setting-row">
+        <label>فونت:</label>
+        <input type="color" id="settingsFont" />
+        <span class="color-preview" id="fontPreview"></span>
+      </div>
+      <div class="setting-row">
+        <label>هدر:</label>
+        <input type="color" id="settingsHeader" />
+        <span class="color-preview" id="headerPreview"></span>
+      </div>
     </div>
-    <div class="setting-row">
-      <label for="settingsCard">رنگ کارت‌ها</label>
-      <input type="color" id="settingsCard" />
+    <div class="settings-panel-footer">
+      <button type="button" class="site-settings-btn" id="saveBtn">
+        ذخیره
+      </button>
+      <button type="button" class="site-settings-btn" id="resetBtn">
+        ریست
+      </button>
+      <button type="button" class="site-settings-btn" id="closeBtn">
+        بستن
+      </button>
     </div>
-    <div class="setting-row">
-      <label for="settingsBtn">رنگ دکمه‌ها</label>
-      <input type="color" id="settingsBtn" />
-    </div>
-    <div class="setting-row">
-      <label for="settingsFont">رنگ فونت</label>
-      <input type="color" id="settingsFont" />
-    </div>
-    <div class="setting-row">
-      <label for="settingsHeader">رنگ هدر</label>
-      <input type="color" id="settingsHeader" />
-    </div>
-  </div>
-  <div class="settings-panel-footer">
-    <button class="site-settings-btn" onclick="saveSiteSettings()">
-      ذخیره
-    </button>
-    <button class="site-settings-btn" onclick="resetSiteSettings()">
-      ریست
-    </button>
-    <button class="site-settings-btn" onclick="toggleSiteSettings()">
-      بستن
-    </button>
-  </div>
+  </form>
 </div>
